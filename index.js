@@ -1,6 +1,6 @@
-const createMetadata = require('grpc-create-metadata')
+const createMetadata = require('grpc-create-metadata');
 
-module.exports = createGRPCError
+module.exports.createGRPCError = createGRPCError;
 
 /**
  * Utility function that creates an Error suitable for gRPC responses.
@@ -50,9 +50,9 @@ module.exports = createGRPCError
  * console.log(err.metadata instanceof grpc.Metadata) // true
  * console.log(err.metadata.getMap()) // { foo: 'bar', error_code: 'INVALID_TOKEN' }
  */
-function createGRPCError (message, code, metadata) {
-  const err = new Error()
-  return applyCreate(err, message, code, metadata)
+function createGRPCError(message, code, metadata) {
+    const err = new Error();
+    return applyCreate(err, message, code, metadata);
 }
 
 /**
@@ -64,70 +64,74 @@ function createGRPCError (message, code, metadata) {
  * @param  {Object} metadata See <code>createGRPCError</code> description
  * @return {Error} See <code>createGRPCError</code> description
  */
-function applyCreate (err, message, code, metadata) {
-  if (err instanceof Error === false) {
-    throw new Error('Source error must be an instance of Error')
-  }
-
-  if (message instanceof Error) {
-    err.message = message.message.toString()
-    if (typeof message.code === 'number') {
-      err.code = message.code
+function applyCreate(err, message, code, metadata) {
+    if (err instanceof Error === false) {
+        throw new Error('Source error must be an instance of Error');
     }
-    if (typeof message.metadata === 'object') {
-      err.metadata = createMetadata(message.metadata)
+
+    if (message instanceof Error) {
+        err.message = message.message.toString();
+        if (typeof message.code === 'number') {
+            err.code = message.code;
+        }
+        if (typeof message.metadata === 'object') {
+            err.metadata = createMetadata(message.metadata);
+        }
     }
-  }
 
-  const isMsgMD = message instanceof Error
-  if (message && typeof message === 'object' && !isMsgMD) {
-    metadata = message
-    message = ''
-    code = null
-  }
-
-  if (typeof message === 'number') {
-    metadata = code
-    code = message
-    message = ''
-  }
-
-  if (code && typeof code === 'object') {
-    metadata = code
-    code = null
-  }
-
-  if (!metadata) {
-    metadata = null
-  }
-
-  if (typeof message === 'string') {
-    err.message = message
-  }
-
-  if (typeof code === 'number') {
-    err.code = code
-  }
-
-  if (metadata && typeof metadata === 'object') {
-    if (err.metadata) {
-      const existingMeta = err.metadata && typeof err.metadata.getMap === 'function'
-        ? err.metadata.getMap()
-        : null
-
-      const md = typeof metadata.getMap === 'function'
-        ? metadata.getMap()
-        : metadata
-
-      if (existingMeta || md) {
-        err.metadata = createMetadata(Object.assign({}, existingMeta || {}, md || {}))
-      }
-    } else {
-      err.metadata = createMetadata(metadata)
+    const isMsgMD = message instanceof Error;
+    if (message && typeof message === 'object' && !isMsgMD) {
+        metadata = message;
+        message = '';
+        code = null;
     }
-  }
 
-  return err
+    if (typeof message === 'number') {
+        metadata = code;
+        code = message;
+        message = '';
+    }
+
+    if (code && typeof code === 'object') {
+        metadata = code;
+        code = null;
+    }
+
+    if (!metadata) {
+        metadata = null;
+    }
+
+    if (typeof message === 'string') {
+        err.message = message;
+    }
+
+    if (typeof code === 'number') {
+        err.code = code;
+    }
+
+    if (metadata && typeof metadata === 'object') {
+        if (err.metadata) {
+            const existingMeta =
+                err.metadata && typeof err.metadata.getMap === 'function'
+                    ? err.metadata.getMap()
+                    : null;
+
+            const md =
+                typeof metadata.getMap === 'function'
+                    ? metadata.getMap()
+                    : metadata;
+
+            if (existingMeta || md) {
+                err.metadata = createMetadata(
+                    Object.assign({}, existingMeta || {}, md || {}),
+                );
+            }
+        } else {
+            err.metadata = createMetadata(metadata);
+        }
+    }
+
+    return err;
 }
 
-createGRPCError.applyCreate = applyCreate
+module.exports.applyCreate = applyCreate;
