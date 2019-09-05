@@ -17,3 +17,5 @@ export function applyCreate(
     code: number | object | grpc.status,
     metadata?: object,
 ): GRPCError;
+
+export { status as ErrorCode } from 'grpc';
