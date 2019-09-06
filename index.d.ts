@@ -18,4 +18,4 @@ export function applyCreate(
     metadata?: object,
 ): GRPCError;
 
-export { status as ErrorCode } from 'grpc';
+export { status as ErrorCode, ServiceError } from 'grpc';
