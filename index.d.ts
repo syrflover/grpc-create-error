@@ -1,4 +1,4 @@
-import * as grpc from 'grpc';
+import * as grpc from '@grpc/grpc-js';
 
 export interface GRPCError extends Error {
     code: number;
