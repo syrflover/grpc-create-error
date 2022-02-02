@@ -27,7 +27,7 @@
         "client"
     ],
     "dependencies": {
-        "grpc-create-metadata": "^3.0.0"
+        "grpc-create-metadata": "^4.0.1"
     },
     "devDependencies": {
         "async": "^3.0.1",
